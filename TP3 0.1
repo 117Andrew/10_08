@@ -138,12 +138,18 @@ def consultaProd():
     t = os.path.getsize(afprod)
     print("Listado de productos\n")
     alprod.seek(0,0)
+    cont = 0
     while alprod.tell() < t:
         if vrprod.codigo != -1:
             vrprod = pickle.load(alprod)
             print(vrprod.nombre, vrprod.codigo)
+            cont +=1
         else:
             vrprod = pickle.load(alprod)
+        if cont == 0:
+            print("No hay productos cargados")
+    if t == 0:
+        print("No hay productos cargados")
 
 def prod():
     printmenuterciario()
