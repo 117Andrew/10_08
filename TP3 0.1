@@ -59,3 +59,69 @@ if not os.path.exists(afsilos):                                         ###Compr
     alsilos = open(afsilos, "w+b")                                      ###Crea el archivo si no existe###
 else:
     alsilos = open(afsilos, "r+b")
+
+def cerrar():
+    alprod.close()
+    alop.close()
+    alrubxprod.close()
+    alsilos.close()
+    alrub.close()
+
+def printmenuprincipal():                                               ###Funcion del print del menu principal###
+    
+    print ("\n\nMENU_PRINCIPAL")
+    print ("\n\t1_Administracion")
+    print ("\t2_Entrega de cupos")
+    print ("\t3_Recepcion")
+    print ("\t4_Registrar calidad")
+    print ("\t5_Registrar peso bruto")
+    print ("\t6_Registrar descarga")
+    print ("\t7_Registrar tara")
+    print ("\t8_Reportes")
+    print ("\t\t0_Fin del programa")
+
+def printmenuadmin():                                                   ###Funcion del print del menu administracion###
+
+    print ("\n\nMENU_ADMINISTRACIONES")
+    print ("\n\tA_Titulares")
+    print ("\tB_Productos")
+    print ("\tC_Rubros")
+    print ("\tD_Rubros X productos")
+    print ("\tE_Silos")
+    print ("\tF_Sucursales")
+    print ("\tG_Producto X titular")
+    print ("\t\tV_Volver al menu principal")
+
+def printmenuterciario():                                               ###Funcion del print de los tercer menus###
+    print ("\n\nMENU_TERCIARIO")
+    print ("\n\tA_Alta")
+    print ("\tB_Baja")
+    print ("\tC_Consulta")
+    print ("\tM_Modificacion")
+    print ("\t\tV_Volver_al_menu_administraciones")
+
+def menuPrincipal():            
+    printmenuprincipal()
+    opcionprincipal = int(input("Ingrese la opcion que desee: "))
+    while opcionprincipal != 0:
+        if opcionprincipal == 1:
+            admin()
+        elif opcionprincipal == 2:
+            EntregaCupos()
+        elif opcionprincipal == 3:
+            print()#Recepcion()
+        elif opcionprincipal == 4:
+            print()#RegistrarCalidad()
+        elif opcionprincipal == 5:
+            print()#registrarPesoBruto()
+        elif opcionprincipal == 6:
+            print("Proceso en construccion")
+        elif opcionprincipal == 7:
+            print()#RegistrarTara()
+        elif opcionprincipal == 8:
+            print()#Reportes
+        elif opcionprincipal == 9:
+            print()#ListSilosyRechazos
+        opcionprincipal = int(input("Ingrese la opcion que desee: "))
+    if opcionprincipal == 0:
+        cerrar()
