@@ -60,6 +60,7 @@ if not os.path.exists(afsilos):                                         ###Compr
 else:
     alsilos = open(afsilos, "r+b")
 
+vrprod = productos()
 def cerrar():
     alprod.close()
     alop.close()
@@ -106,6 +107,16 @@ def formatearprod(p):
     p.nombre = str (p.nombre).ljust(8)
     p.estado = str (p.estado).ljust(5)
 
+def posicionarseEnProd(codigo):                                     ###Funcion para conseguir la posicion
+    global alprod, afprod
+    p = productos()
+    t = os.path.getsize(afprod)
+    alprod.seek(0, 0)
+    while alprod.tell()<t and p.codigo != codigo:
+        pos = alprod.tell()
+        p = pickle.load(alprod)
+    return pos
+
 def altaProd():
     global alprod, afprod
     vrprod = productos()
@@ -132,24 +143,34 @@ def altaProd():
             vrprod.nombre = str(input("Ingrese el nombre del producto. 0 para salir"))
             vrprod.nombre = vrprod.nombre.upper()
 
-def consultaProd():
+def bajaProd():
     global afprod, alprod
     vrprod = productos()
     t = os.path.getsize(afprod)
+    if t != 0:
+        codigo = str(input("Ingrese el codigo del producto. 0 para salir"))
+        while codigo != "0": 
+            pos = posicionarseEnProd(codigo)
+            alprod.seek(pos)
+            vrprod.estado = False
+            formatearprod(vrprod)
+            pickle.dump(vrprod,alprod)
+            alprod.flush()
+            print("Se ha eliminado correctamente el producto\n")
+            codigo = str(input("Ingrese el codigo del producto. 0 para salir"))
+    else:
+        print("No hay productos cargados")
+    printmenuterciario()
+
+def consultaProd():
+    global afprod, alprod, vrprod
+    t = os.path.getsize(afprod)
     print("Listado de productos\n")
     alprod.seek(0,0)
-    cont = 0
     while alprod.tell() < t:
-        if vrprod.codigo != -1:
-            vrprod = pickle.load(alprod)
-            print(vrprod.nombre, vrprod.codigo)
-            cont +=1
-        else:
-            vrprod = pickle.load(alprod)
-        if cont == 0:
-            print("No hay productos cargados")
-    if t == 0:
-        print("No hay productos cargados")
+        vrprod = pickle.load(alprod)
+        print(vrprod.nombre, vrprod.codigo)
+    printmenuterciario()
 
 def prod():
     printmenuterciario()
