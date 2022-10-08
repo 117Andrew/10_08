@@ -1,0 +1,61 @@
+import os                                                               ###Comienzo de la importacion de librerias###
+import pickle   
+import os.path
+import datetime    
+
+class operaciones:                                                      ###Comienzo de la declaracion de clases###
+    def __init__(self):
+        self.patente = ""
+        self.codProd = 0
+        self.fechaCupo = datetime.date.today()
+        self.estado = ""
+        self.bruto = 0
+        self.tara = 0
+class productos:
+    def __init__(self):
+        self.codigo = 0
+        self.nombre = ""
+        self.estado = True
+class rubro:
+    def __init__(self):
+        self.codigo = 0
+        self.nombre = ""
+class rubros_x_producto:
+    def __init__(self):
+        self.codRubro = 0
+        self.codProd = 0
+        self.min = 0.0
+        self.max = 0.0
+class silo:
+    def __init__(self):
+        self.codSilo = 0
+        self.nombre = 0
+        self.codProd = 0
+        self.stock = 0 
+
+afop = "./operaciones.dat"                                              ###Comienzo de la declaracion de archivos fisicos###
+afprod = "./productos.dat"
+afrub = "./rubros.dat"
+afrubxprod = "./rubros_x_productos.dat"
+afsilos = "./silos.dat"
+
+if not os.path.exists(afop):                                            ###Comprueba exisitencia del archivo###
+    alop = open(afop, "w+b")                                            ###Crea el archivo si no existe###
+else:
+    alop = open(afop, "r+b")                                            ###Abre el archivo para lectura y escritura###
+if not os.path.exists(afprod):                                          ###Comprueba exisitencia del archivo###
+    alprod = open(afprod, "w+b")                                        ###Crea el archivo si no existe###
+else:
+    alprod = open(afprod, "r+b")                                        ###Abre el archivo para lectura y escritura###
+if not os.path.exists(afrub):                                           ###Comprueba exisitencia del archivo###
+    alrub = open(afrub, "w+b")                                          ###Crea el archivo si no existe###
+else:
+    alrub = open(afrub, "r+b")                                          ###Abre el archivo para lectura y escritura###
+if not os.path.exists(afrubxprod):                                      ###Comprueba exisitencia del archivo###
+    alrubxprod = open(afrubxprod, "w+b")                                ###Crea el archivo si no existe###
+else:
+    alrubxprod = open(afrubxprod, "r+b")                                ###Abre el archivo para lectura y escritura###
+if not os.path.exists(afsilos):                                         ###Comprueba exisitencia del archivo###
+    alsilos = open(afsilos, "w+b")                                      ###Crea el archivo si no existe###
+else:
+    alsilos = open(afsilos, "r+b")
