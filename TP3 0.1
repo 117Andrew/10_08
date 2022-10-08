@@ -132,6 +132,19 @@ def altaProd():
             vrprod.nombre = str(input("Ingrese el nombre del producto. 0 para salir"))
             vrprod.nombre = vrprod.nombre.upper()
 
+def consultaProd():
+    global afprod, alprod
+    vrprod = productos()
+    t = os.path.getsize(afprod)
+    print("Listado de productos\n")
+    alprod.seek(0,0)
+    while alprod.tell() < t:
+        if vrprod.codigo != -1:
+            vrprod = pickle.load(alprod)
+            print(vrprod.nombre, vrprod.codigo)
+        else:
+            vrprod = pickle.load(alprod)
+
 def prod():
     printmenuterciario()
     opprod = input("Ingrese una opcion. V para salir: ")
