@@ -103,9 +103,14 @@ def printmenuterciario():                                               ###Funci
 
 def formatearprod(p):
     p = productos()
-    p.codigo = str (p.codigo).ljust(3)
-    p.nombre = str (p.nombre).ljust(8)
-    p.estado = str (p.estado).ljust(5)
+    p.codigo = str (p.codigo).ljust(3, ' ')
+    p.nombre = str (p.nombre).ljust(8, ' ')
+    p.estado = str (p.estado).ljust(5, ' ')
+
+def formatearrubros(r):
+    r = rubro()
+    r.codigo= str (r.codigo).ljust(3, ' ')
+    r.nombre= str (r.nombre).ljust(8, ' ')
 
 def posicionarseEnProd(codigo):                                     ###Funcion para conseguir la posicion
     global alprod, afprod
@@ -116,6 +121,26 @@ def posicionarseEnProd(codigo):                                     ###Funcion p
         pos = alprod.tell()
         p = pickle.load(alprod)
     return pos
+
+def ordenarrubros():
+    global alrub, afrub
+    alrub.seek (0, 0)
+    aux = pickle.load(alrub)
+    tamReg = alrub.tell() 
+    t = os.path.getsize(afrub)
+    cant = int(t / tamReg)  
+    for i in range(0, cant-1):
+        for j in range (i+1, cant):
+            alrub.seek (i*tamReg, 0)
+            auxi = pickle.load(alrub)
+            alrub.seek (j*tamReg, 0)
+            auxj = pickle.load(alrub)
+            if (auxi.codigo > auxj.codigo):
+                alrub.seek (i*tamReg, 0)
+                pickle.dump(auxj, alrub)
+                alrub.seek (j*tamReg, 0)
+                pickle.dump(auxi,alrub)
+                alrub.flush()
 
 def altaProd():
     global alprod, afprod
@@ -142,6 +167,31 @@ def altaProd():
             alprod.flush()
             vrprod.nombre = str(input("Ingrese el nombre del producto. 0 para salir"))
             vrprod.nombre = vrprod.nombre.upper()
+
+def altaRubros():
+    global afrub, alrub
+    vrrubro= rubro()
+    t = os.path.getsize(afrub)
+    if t == 0:
+        vrrubro.codigo = input("Ingrese el código del rubro. 0 para cancelar. ")
+        while vrrubro.codigo != 0:
+            vrrubro.nombre = str (input("Ingrese el nombre del rubro"))
+            vrrubro.nombre = vrrubro.nombre.upper()
+            formatearrubros(vrrubro)
+            pickle.dump(vrrubro,alrub)
+            alrub.flush()
+            vrrubro.codigo = int(input("Ingrese el codigo del rubro. 0 para cancelar. "))
+    else:
+        alrub.seek(0,2)
+        vrrubro.codigo = int(input("Ingrese el codigo del rubro. 0 para cancelar. "))
+        while vrrubro.codigo != 0:
+            vrrubro.nombre = str(input("ingrese el nombre del rubro. 0 para salir. "))
+            vrrubro.nombre = vrrubro.nombre.upper() 
+            ordenarrubros()
+            formatearrubros(vrrubro)
+            pickle.dump(vrrubro,alrub)
+            alprod.flush()
+            vrrubro.codigo = int(input("Ingrese el codigo del rubro. 0 para cancelar. "))
 
 def bajaProd():
     global afprod, alprod
@@ -191,6 +241,19 @@ def prod():
             print ("Ingrese una opcion correcta")
         opprod = input("Ingrese una opcion. V para salir: ")
         opprod = opprod.upper()
+    printmenuadmin()
+
+def rubros():
+    printmenuterciario()
+    oprubros = input("Ingrese una opcion: ")
+    oprubros = oprubros.upper()
+    while oprubros != "V":
+        if (oprubros == "A"):
+            altaRubros()
+            oprubros = input("Ingrese una opcion: ")
+            oprubros = oprubros.upper()
+        else:
+            print("Esta funcionalidad esta en construccion")
     printmenuadmin()
 
 def admin():                                                            ###funcion de administraciones
