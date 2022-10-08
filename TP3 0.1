@@ -100,6 +100,79 @@ def printmenuterciario():                                               ###Funci
     print ("\tM_Modificacion")
     print ("\t\tV_Volver_al_menu_administraciones")
 
+def formatearprod(p):
+    p = productos()
+    p.codigo = str (p.codigo).ljust(3)
+    p.nombre = str (p.nombre).ljust(8)
+    p.estado = str (p.estado).ljust(5)
+
+def altaProd():
+    global alprod, afprod
+    vrprod = productos()
+    t = os.path.getsize(afprod)
+    if t == 0:
+        vrprod.nombre = str (input("Ingrese el nombre del producto. 0 para salir"))
+        while  vrprod.nombre!= "0":
+            vrprod.codigo = input("Ingrese codigo del producto")
+            vrprod.estado = True
+            formatearprod(vrprod)
+            pickle.dump(vrprod,alprod)
+            alprod.flush()
+            vrprod.nombre = str (input("Ingrese el nombre del producto. 0 para salir"))
+    else:
+        alprod.seek(t)
+        vrprod.nombre = str (input("Ingrese el nombre del producto. 0 para salir"))
+        vrprod.nombre = vrprod.nombre.upper()
+        while  vrprod.nombre!= "0":
+            vrprod.codigo = input("Ingrese codigo del producto. 0 para salir")
+            vrprod.estado = True
+            formatearprod(vrprod)
+            pickle.dump(vrprod,alprod)
+            alprod.flush()
+            vrprod.nombre = str(input("Ingrese el nombre del producto. 0 para salir"))
+            vrprod.nombre = vrprod.nombre.upper()
+
+def prod():
+    printmenuterciario()
+    opprod = input("Ingrese una opcion. V para salir: ")
+    opprod = opprod.upper()
+    while opprod != "V":
+        if (opprod == "A"):
+            altaProd()
+        elif (opprod == "B"):
+           bajaProd()
+        elif (opprod == "C"):
+           consultaProd()
+        elif (opprod == "M"):
+            modProd()
+        elif (opprod == "F"):
+            alprod = open(afprod, "w+b")
+        else:
+            print ("Ingrese una opcion correcta")
+        opprod = input("Ingrese una opcion. V para salir: ")
+        opprod = opprod.upper()
+    printmenuadmin()
+
+def admin():                                                            ###funcion de administraciones
+    printmenuadmin()
+    opcionadmin = (input("Ingrese la opcion deseada. 'V' para salir: "))
+    opcionadmin = opcionadmin.upper()
+    while opcionadmin != "V":
+        if (opcionadmin == "A" or opcionadmin == "F" or opcionadmin == "G"):
+            print(opcionadmin)
+            print("Esta funcionalidad esta en construccion")
+        elif (opcionadmin == "B"):                                      ###Lleva al menu productos###
+            prod()
+        elif (opcionadmin == "C"):                                      ###Lleva al menu rubros###
+            rubros()
+        elif (opcionadmin == "D"):                                      ###Lleva al menu rubros x productos###
+            rubrosxProd()
+        elif (opcionadmin == "E"):                                      ###Lleva al menu silos###
+            silos()
+        opcionadmin = (input("Ingrese la opcion deseada. 'V' para salir: "))
+        opcionadmin = opcionadmin.upper() 
+    printmenuprincipal()
+
 def menuPrincipal():            
     printmenuprincipal()
     opcionprincipal = int(input("Ingrese la opcion que desee: "))
@@ -125,3 +198,4 @@ def menuPrincipal():
         opcionprincipal = int(input("Ingrese la opcion que desee: "))
     if opcionprincipal == 0:
         cerrar()
+menuPrincipal()
