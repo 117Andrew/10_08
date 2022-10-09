@@ -107,6 +107,17 @@ def formatearprod(p):
     p.nombre = str (p.nombre).ljust(8, ' ')
     p.estado = str (p.estado).ljust(5, ' ')
 
+def formatearoperaciones(op):
+    op = operaciones()
+    op.patente= str (op.patente).ljust(7, ' ')
+    op.codProd= str (op.codProd).ljust(3, ' ')
+    print(type(op.fechaCupo))
+    op.fechaCupo = str (op.fechaCupo).ljust(12, ' ')
+    print(type(op.fechaCupo))
+    op.estado= str (op.estado).ljust(2, ' ')
+    op.bruto= str (op.bruto).ljust(5, ' ')
+    op.tara= str (op.tara).ljust(5, ' ')
+
 def formatearrubros(r):
     r = rubro()
     r.codigo= str (r.codigo).ljust(3, ' ')
@@ -156,12 +167,49 @@ def ordenarrubros():
                 pickle.dump(auxi,alrub)
                 alrub.flush()
 
+def validarPatente (patente):                                        ###Funcion para validar largo de la patente
+    r = False
+    if (len(patente) >= 6) and (len (patente) <= 7):
+        r = True
+        return r
+    else:
+        print ("La patente ingresada no es valida")
+        return r
+
+def validarProd(codigo):
+    global alprod, afprod
+    vrprod = productos()
+    t = os.path.getsize(afprod)
+    r = False
+    while codigo != vrprod.codigo and alprod.tell() < t:
+        if codigo == vrprod.codigo:
+            r = True
+        vrprod = pickle.load(alprod)
+    return r
+
+def validarExisteFecha(fecha, patente):
+    global alop, afop
+    vrop = operaciones()
+    t = os.path.getsize(afop)
+    r = False
+    if t == 0:
+        r = False
+    else:
+        alop.seek(0,0)
+        while alop.tell < t and r == False:
+            if vrop.fechaCupo == fecha:
+                r = True
+            else:
+                vrop = pickle.load(alop)
+    return r
+
 def altaProd():
     global alprod, afprod
     vrprod = productos()
     t = os.path.getsize(afprod)
     if t == 0:
         vrprod.nombre = str (input("Ingrese el nombre del producto. 0 para salir"))
+        vrprod.nombre = vrprod.nombre.upper()
         while  vrprod.nombre!= "0":
             vrprod.codigo = input("Ingrese codigo del producto")
             vrprod.estado = True
@@ -169,6 +217,7 @@ def altaProd():
             pickle.dump(vrprod,alprod)
             alprod.flush()
             vrprod.nombre = str (input("Ingrese el nombre del producto. 0 para salir"))
+            vrprod.nombre = vrprod.nombre.upper()
     else:
         alprod.seek(t)
         vrprod.nombre = str (input("Ingrese el nombre del producto. 0 para salir"))
@@ -369,6 +418,48 @@ def silos():
         else:
             print("Esta funcionalidad esta en construccion")
     printmenuadmin()
+
+def EntregaCupos():
+    global afop, alop, vrop
+    t = os.path.getsize(afop)
+    patenteAux = str (input("Ingrese la patente para solicitar el cupo. 0 para salir\n"))
+    patenteAux = patenteAux.upper()
+    while patenteAux != "0":
+        if validarPatente(patenteAux) != False:
+            codigoAux = int (input("Ingrese el codigo del producto a entregar\n"))
+            if validarProd(codigoAux) != True:
+                fechaAux = str (input("Ingrese la fecha para el cupo en el formato 'aaaa-mm-dd'\n"))
+                fechaAux = datetime.date.fromisoformat(fechaAux)
+                print(fechaAux)
+                if validarExisteFecha(fechaAux, patenteAux) == False :
+                    if t == 0:
+                        vrop.patente = patenteAux
+                        vrop.codigo = codigoAux
+                        vrop.fecha = fechaAux
+                        vrop.estado = "P"
+                        formatearoperaciones(vrop)
+                        pickle.dump(vrop,alop)
+                        alop.flush()
+                    else:
+                        alop.seek(t)
+                        vrop.patente = patenteAux
+                        vrop.codigo = codigoAux
+                        vrop.fecha = fechaAux
+                        vrop.estado = "P"
+                        formatearoperaciones(vrop)
+                        pickle.dump(vrop,alop)
+                        alop.flush()
+                else:
+                    print("Ya hay un cupo otorgado en esa fecha")
+            else:
+                print("Ingrese un codigo de producto valido")
+        else:
+            print("Ingrese la patente correctamente")
+            patenteAux = 0
+        patenteAux = str (input("Ingrese la patente para solicitar el cupo. 0 para salir\n"))
+        patenteAux = patenteAux.upper()
+    printmenuprincipal()
+
 
 def admin():                                                            ###funcion de administraciones
     printmenuadmin()
