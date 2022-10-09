@@ -392,6 +392,8 @@ def rubros():
             oprubros = oprubros.upper()
         else:
             print("Esta funcionalidad esta en construccion")
+            oprubros = input("Ingrese una opcion: ")
+            oprubros = oprubros.upper()
     printmenuadmin()
 
 def rubrosxProd():
@@ -405,6 +407,8 @@ def rubrosxProd():
             oprubrosxProd = oprubrosxProd.upper()
         else:
             print("Esta funcionalidad esta en construccion")
+            oprubrosxProd = input("Ingrese una opcion: ")
+            oprubrosxProd = oprubrosxProd.upper()
     printmenuadmin()
 
 def silos():
@@ -418,6 +422,8 @@ def silos():
             opsilos = opsilos.upper()
         else:
             print("Esta funcionalidad esta en construccion")
+            opsilos = input("Ingrese una opcion: ")
+            opsilos = opsilos.upper()
     printmenuadmin()
 
 def EntregaCupos():
