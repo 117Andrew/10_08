@@ -191,6 +191,7 @@ def Busqxd(patente):
     vrop = operaciones()
 
     t = os.path.getsize(afop)
+        
     vrop = pickle.load(alop)
     alop.seek(0)
     while (alop.tell() < t) and (vrop.patente != patente):
@@ -242,8 +243,9 @@ def validarProd(codigo):
     vrprod = productos()
     t = os.path.getsize(afprod)
     r = False
+    vrprod = pickle.load(alprod)
     alprod.seek(0,0)
-    while codigo != vrprod.codigo and alprod.tell() < t:
+    while codigo != vrprod.codigo and alprod.tell() < t:     #EDICIÓN: SAQUÉ EL IF DEL WHILE#
         if codigo == vrprod.codigo:
             r = True
         vrprod = pickle.load(alprod)
@@ -578,7 +580,7 @@ def EntregaCupos():
 
 
 def Reception():
-    global alop, afop
+    global afop, alop
     vrop = operaciones()
     optionRep = input("Desea seguir con el menú de Recepción, S o N: ")
     optionRep = optionRep.upper()
