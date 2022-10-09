@@ -112,6 +112,13 @@ def formatearrubros(r):
     r.codigo= str (r.codigo).ljust(3, ' ')
     r.nombre= str (r.nombre).ljust(8, ' ')
 
+def formatearRubrosxProd (rxp):
+    rxp = rubros_x_producto()
+    rxp.codRubro= str (rxp.codRubro).ljust(3, ' ')
+    rxp.codProd= str (rxp.codProd).ljust(3, ' ') 
+    rxp.min= str (rxp.min).ljust(3, ' ')
+    rxp.max= str (rxp.max).ljust(3, ' ')
+
 def posicionarseEnProd(codigo):                                     ###Funcion para conseguir la posicion
     global alprod, afprod
     p = productos()
@@ -193,6 +200,33 @@ def altaRubros():
             alprod.flush()
             vrrubro.codigo = int(input("Ingrese el codigo del rubro. 0 para cancelar. "))
 
+def altaRubrosxProd():
+    global afrubxprod, alrubxprod
+    vrRxP = rubros_x_producto()
+    t = os.path.getsize(afrubxprod)
+    if t == 0:
+        vrRxP.codRubro = int(input("ingrese el codigo del rubroxprod: "))
+        while vrRxP.codRubro != 0:
+            vrRxP.codProd = int(input("ingrese el codigo del producto: "))
+            vrRxP.min = int(input("Ingrese la mínima cantidad: "))
+            vrRxP.max = int(input("Ingrese la máxima cantidad: "))
+            formatearRubrosxProd(vrRxP)
+            pickle.dump(vrRxP, alrubxprod)
+            alrubxprod.flush()
+            vrRxP.codRubro = int(input("ingrese el codigo del rubroxprod: "))
+    else:
+        alrubxprod.seek (0,2)
+        vrRxP.codRubro = int(input("ingrese el codigo del rubroxprod: "))
+        while vrRxP.codRubro != 0:
+            vrRxP.codProd = int(input("ingrese el codigo del producto: "))
+            vrRxP.min = int(input("Ingrese la mínima cantidad: "))
+            vrRxP.max = int(input("Ingrese la máxima cantidad: "))
+            formatearRubrosxProd()
+            pickle.dump(vrRxP, alrubxprod)
+            alrubxprod.flush()
+            vrRxP.codRubro = int(input("ingrese el codigo del rubroxprod: "))
+    printmenuterciario()
+
 def bajaProd():
     global afprod, alprod
     vrprod = productos()
@@ -252,6 +286,19 @@ def rubros():
             altaRubros()
             oprubros = input("Ingrese una opcion: ")
             oprubros = oprubros.upper()
+        else:
+            print("Esta funcionalidad esta en construccion")
+    printmenuadmin()
+
+def rubrosxProd():
+    printmenuterciario()
+    oprubrosxProd = input("Ingrese una opcion: ")
+    oprubrosxProd = oprubrosxProd.upper()
+    while oprubrosxProd != "V":
+        if (oprubrosxProd == "A"):
+            altaRubrosxProd()
+            oprubrosxProd = input("Ingrese una opcion: ")
+            oprubrosxProd = oprubrosxProd.upper()
         else:
             print("Esta funcionalidad esta en construccion")
     printmenuadmin()
