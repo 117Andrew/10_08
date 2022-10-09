@@ -7,7 +7,7 @@ class operaciones:                                                      ###Comie
     def __init__(self):
         self.patente = ""
         self.codProd = 0
-        self.fechaCupo = datetime.date.today()
+        self.fechaCupo = datetime.date.fromisoformat("2022-10-01")
         self.estado = ""
         self.bruto = 0
         self.tara = 0
@@ -112,7 +112,7 @@ def formatearoperaciones(op):
     op.patente= str (op.patente).ljust(7, ' ')
     op.codProd= str (op.codProd).ljust(3, ' ')
     print(type(op.fechaCupo))
-    op.fechaCupo = str (op.fechaCupo).ljust(12, ' ')
+    op.fechaCupo = str (op.fechaCupo).ljust(10, ' ')
     print(type(op.fechaCupo))
     op.estado= str (op.estado).ljust(2, ' ')
     op.bruto= str (op.bruto).ljust(5, ' ')
@@ -181,6 +181,7 @@ def validarProd(codigo):
     vrprod = productos()
     t = os.path.getsize(afprod)
     r = False
+    alprod.seek(0,0)
     while codigo != vrprod.codigo and alprod.tell() < t:
         if codigo == vrprod.codigo:
             r = True
@@ -196,7 +197,7 @@ def validarExisteFecha(fecha, patente):
         r = False
     else:
         alop.seek(0,0)
-        while alop.tell < t and r == False:
+        while alop.tell() < t and r == False:
             if vrop.fechaCupo == fecha:
                 r = True
             else:
@@ -420,7 +421,8 @@ def silos():
     printmenuadmin()
 
 def EntregaCupos():
-    global afop, alop, vrop
+    global afop, alop
+    vrop = operaciones()
     t = os.path.getsize(afop)
     patenteAux = str (input("Ingrese la patente para solicitar el cupo. 0 para salir\n"))
     patenteAux = patenteAux.upper()
@@ -434,10 +436,11 @@ def EntregaCupos():
                 if validarExisteFecha(fechaAux, patenteAux) == False :
                     if t == 0:
                         vrop.patente = patenteAux
-                        vrop.codigo = codigoAux
-                        vrop.fecha = fechaAux
+                        vrop.codProd = codigoAux
+                        vrop.fechaCupo = fechaAux
                         vrop.estado = "P"
                         formatearoperaciones(vrop)
+                        print (vrop.fechaCupo)
                         pickle.dump(vrop,alop)
                         alop.flush()
                     else:
@@ -453,6 +456,8 @@ def EntregaCupos():
                     print("Ya hay un cupo otorgado en esa fecha")
             else:
                 print("Ingrese un codigo de producto valido")
+        elif patenteAux == "F":
+            alop = open(afop, "w+b")
         else:
             print("Ingrese la patente correctamente")
             patenteAux = 0
