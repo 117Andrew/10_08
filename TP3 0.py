@@ -1,9 +1,21 @@
-import os                                                               ###Comienzo de la importacion de librerias###
+'''
+Integrantes del grupo
+Albanesi, Julian Andres
+Martinez, Valentina
+Vallejos, Tomas
+'''
+###---Importacion de librerias---###
+
+import os                                                               
 import pickle   
 import os.path
 import datetime    
 
-class operaciones:                                                      ###Comienzo de la declaracion de clases###
+###--------------------------------------------------------- ###
+
+###---Declaracion de constructores---###
+
+class operaciones:                                                      
     def __init__(self):
         self.patente = ""
         self.codProd = 0
@@ -33,11 +45,17 @@ class silo:
         self.codProd = 0
         self.stock = 0 
 
-afop = "./operaciones.dat"                                              ###Comienzo de la declaracion de archivos fisicos###
+###--------------------------------------------------------- ###
+
+###--- Declaracion de archivos fisicos ---###
+
+afop = "./operaciones.dat"                                              
 afprod = "./productos.dat"
 afrub = "./rubros.dat"
 afrubxprod = "./rubros_x_productos.dat"
 afsilos = "./silos.dat"
+
+###--- Declaracion de archivos logicos ---###
 
 if not os.path.exists(afop):                                            ###Comprueba exisitencia del archivo###
     alop = open(afop, "w+b")                                            ###Crea el archivo si no existe###
@@ -60,7 +78,14 @@ if not os.path.exists(afsilos):                                         ###Compr
 else:
     alsilos = open(afsilos, "r+b")
 
+###--- Declaracion de variables auxiliares de registro ---###
+
 vrprod = productos()
+
+
+###--------------------------------------------------------- ###
+
+###--- Declaracion de metodo para cerrar archivos ---###
 def cerrar():
     alprod.close()
     alop.close()
@@ -68,6 +93,10 @@ def cerrar():
     alsilos.close()
     alrub.close()
 
+
+###--------------------------------------------------------- ###
+
+###--- Declaracion de metodos para prints de menu ---###
 def printmenuprincipal():                                               ###Funcion del print del menu principal###
     
     print ("\n\nMENU_PRINCIPAL")
@@ -100,6 +129,11 @@ def printmenuterciario():                                               ###Funci
     print ("\tC_Consulta")
     print ("\tM_Modificacion")
     print ("\t\tV_Volver_al_menu_administraciones")
+
+
+###--------------------------------------------------------- ###
+
+###--- Declaracion de metodos de formateo ---###
 
 def formatearprod(p):
     p = productos()
@@ -137,6 +171,11 @@ def formatearSilos(s):
     s.codProd= str (s.codProd).ljust(12, ' ')
     s.stock= str (s.stock).ljust(32, ' ')
 
+
+###--------------------------------------------------------- ###
+
+###--- Declaracion de metodos para posicionamiento y ordenamiento ---###
+
 def posicionarseEnProd(codigo):                                     ###Funcion para conseguir la posicion
     global alprod, afprod
     p = productos()
@@ -166,6 +205,11 @@ def ordenarrubros():
                 alrub.seek (j*tamReg, 0)
                 pickle.dump(auxi,alrub)
                 alrub.flush()
+
+
+###--------------------------------------------------------- ###
+
+###--- Declaracion de metodos de validacion ---###
 
 def validarPatente (patente):                                        ###Funcion para validar largo de la patente
     r = False
@@ -203,6 +247,11 @@ def validarExisteFecha(fecha, patente):
             else:
                 vrop = pickle.load(alop)
     return r
+
+
+###--------------------------------------------------------- ###
+
+###--- Declaracion de altas, bajas, modificacion y consulta para administracion ---###
 
 def altaProd():
     global alprod, afprod
@@ -313,6 +362,7 @@ def altaSilos():
             vrsilos.codSilo = int(input("Ingrese el código del silo. 0 para salir: "))
     printmenuterciario()
 
+
 def bajaProd():
     global afprod, alprod
     vrprod = productos()
@@ -359,6 +409,11 @@ def modProd():
             pickle.dump(vrprod,alprod)
             alprod.flush()
             codigo = (input("Ingrese el codigo del producto a cambiar. 0 para salir"))
+
+
+###--------------------------------------------------------- ###
+
+###--- Declaracion de metodos para los menus terciarios dentro de administracion ---###
 
 def prod():
     printmenuterciario()
@@ -426,6 +481,36 @@ def silos():
             opsilos = opsilos.upper()
     printmenuadmin()
 
+
+###--------------------------------------------------------- ###
+
+###--- Declaracion del metodo para el menu administracion---###
+
+def admin():                                                            ###funcion de administraciones
+    printmenuadmin()
+    opcionadmin = (input("Ingrese la opcion deseada. 'V' para salir: "))
+    opcionadmin = opcionadmin.upper()
+    while opcionadmin != "V":
+        if (opcionadmin == "A" or opcionadmin == "F" or opcionadmin == "G"):
+            print(opcionadmin)
+            print("Esta funcionalidad esta en construccion")
+        elif (opcionadmin == "B"):                                      ###Lleva al menu productos###
+            prod()
+        elif (opcionadmin == "C"):                                      ###Lleva al menu rubros###
+            rubros()
+        elif (opcionadmin == "D"):                                      ###Lleva al menu rubros x productos###
+            rubrosxProd()
+        elif (opcionadmin == "E"):                                      ###Lleva al menu silos###
+            silos()
+        opcionadmin = (input("Ingrese la opcion deseada. 'V' para salir: "))
+        opcionadmin = opcionadmin.upper() 
+    printmenuprincipal()
+
+
+###--------------------------------------------------------- ###
+
+###--- Declaracion del metodo para el menu entrega de cupos ---###
+
 def EntregaCupos():
     global afop, alop
     vrop = operaciones()
@@ -472,25 +557,9 @@ def EntregaCupos():
     printmenuprincipal()
 
 
-def admin():                                                            ###funcion de administraciones
-    printmenuadmin()
-    opcionadmin = (input("Ingrese la opcion deseada. 'V' para salir: "))
-    opcionadmin = opcionadmin.upper()
-    while opcionadmin != "V":
-        if (opcionadmin == "A" or opcionadmin == "F" or opcionadmin == "G"):
-            print(opcionadmin)
-            print("Esta funcionalidad esta en construccion")
-        elif (opcionadmin == "B"):                                      ###Lleva al menu productos###
-            prod()
-        elif (opcionadmin == "C"):                                      ###Lleva al menu rubros###
-            rubros()
-        elif (opcionadmin == "D"):                                      ###Lleva al menu rubros x productos###
-            rubrosxProd()
-        elif (opcionadmin == "E"):                                      ###Lleva al menu silos###
-            silos()
-        opcionadmin = (input("Ingrese la opcion deseada. 'V' para salir: "))
-        opcionadmin = opcionadmin.upper() 
-    printmenuprincipal()
+###--------------------------------------------------------- ###
+
+###--- Declaracion del metodo para el menu principal ---###
 
 def menuPrincipal():            
     printmenuprincipal()
@@ -517,4 +586,8 @@ def menuPrincipal():
         opcionprincipal = int(input("Ingrese la opcion que desee: "))
     if opcionprincipal == 0:
         cerrar()
+
+
+###--------------------------------------------------------- ###
+
 menuPrincipal()
