@@ -558,6 +558,85 @@ def EntregaCupos():
 
 
 ###--------------------------------------------------------- ###
+def RegistrarCalidad():
+    global afop, alop, afprod, alprod, vrprod, vrrubro, vrRxP
+    vrprod= productos()
+    
+
+    option = str(input("¿Desea continuar? S/N"))
+    option = option.upper()
+    while option != "N":
+
+        patente = input("Ingrese la Patente del camión: ")
+        Cont = 0
+        while (not validarPatente(patente)):
+            print("Ingrese una patente válida:")
+            patente = input("Ingrese la Patente del camión: ")
+        
+        Pos = BusqPatente(patente)
+        if (Pos != -1):                #Si la posición se encontró, o sea, distinto de -1#
+            vrprod = pickle.load(alprod)
+            alop.seek(Pos)          #Coloco el puntero en el registro de la posición#
+            if (vrprod.estado == "A"):
+                CodPro = int(vrprod.codigo)
+                vrRxP = pickle.load(alrubxprod)
+                if int(vrRxP.codProd) == CodPro:
+                    aux = int(vrRxP.codRubro)
+                    s = os.path.getsize(afrub)
+                    alrub.seek(0)
+                    while alrub.tell < s:
+                        Posi = BusqDic(aux)
+                        if Posi == True:
+                            print(vrrubro.codigo)
+                            print(vrrubro.nombre)
+                            vrrubro = pickle.load(alrub)
+                        elif (Posi == False):
+                            print("No se ha encontrado rubro cargado en el archivo")
+                    
+                    alrubxprod.seek(0)
+                    t = os.path.getsize(afrubxprod)
+                    while alrubxprod.tell() < t:
+                        cod = int(input("Ingrese el codigo del Rubro a comparar: "))   #Preguntar si va a ir avanzando uno por uno con el load y comparando a todos#
+                        if int(vrRxP.codRubro) == cod:
+                            valor = input("Ingrese un Valor: ")
+                            if int(vrRxP.max) > valor and int(vrRxP.min) < valor:
+                                print("El producto es apto.")
+                                vrRxP = pickle.load(alrubxprod)
+                                formatearoperaciones()
+                                pickle.dump(vrop,alop)
+                                pickle.flush()
+                                option = str(input("¿Desea continuar? S/N"))
+                                option = option.upper()
+                            else:
+                                Cont = Cont + 1
+                                vrRxP = pickle.load(alrubxprod)
+                                if Cont >= 2:
+                                    print("Este camión no es apto. Su estado es actualizado a Rechazado.")
+                                    vrop.estado = "R"
+                                    formatearoperaciones()
+                                    pickle.dump(vrop,alop)
+                                    alop.flush()
+                                    option = str(input("¿Desea continuar? S/N"))
+                                    option = option.upper()
+                        else:
+                            vrRxP = pickle.load(alrubxprod)      
+                    if Cont < 2:
+                        print("El producto cumple con las condiciones.")
+                        vrop.estado = "C"
+                        formatearoperaciones()
+                        pickle.dump(vrop,alop)
+                        alop.flush()
+                        option = str(input("¿Desea continuar? S/N"))
+                        option = option.upper()
+            else:
+                print("Este camión no se encuentra en Estado Arribado")
+                option = str(input("¿Desea continuar? S/N"))
+                option = option.upper()
+        else:
+            print("No se ha encontrado un camión con esa patente registrada.")
+            option = str(input("¿Desea continuar? S/N"))
+            option = option.upper()
+    printmenuprincipal()
 
 ###--- Declaracion del metodo para el menu principal ---###
 
