@@ -186,6 +186,23 @@ def posicionarseEnProd(codigo):                                     ###Funcion p
         p = pickle.load(alprod)
     return pos
 
+def Busqxd(patente):
+    global alop, afop
+    vrop = operaciones()
+
+    t = os.path.getsize(afop)
+    vrop = pickle.load(alop)
+    alop.seek(0)
+    while (alop.tell() < t) and (vrop.patente != patente):
+        pos = alop.tell()
+        vrop = pickle.load(alop)
+    if vrop.patente == patente:
+        vrop.estado == "P"
+        return pos
+    else:
+        pos = -1
+        return pos
+        
 def ordenarrubros():
     global alrub, afrub
     alrub.seek (0, 0)
@@ -558,6 +575,35 @@ def EntregaCupos():
 
 
 ###--------------------------------------------------------- ###
+
+
+def Reception():
+    global alop, afop
+    vrop = operaciones()
+    optionRep = input("Desea seguir con el menú de Recepción, S o N: ")
+    optionRep = optionRep.upper()
+    while optionRep != "N":
+        patente = input("Ingrese la patente")
+        while (not validarPatente(patente)):
+            print("Ingrese una patente válida:")
+            patente = input("Ingrese la Patente del camión: ")
+        
+        Pos = Busqxd(patente)
+        vrop = pickle.load(alop)
+        if (Pos != -1):
+            alop.seek(Pos, 0)
+            if datetime.date.today() == vrop.fechaCupo:
+                vrop.estado = "A"
+                optionRep = input("Desea seguir con el menú de Recepción, S o N: ")
+                opctionRep = opctionRep.upper()
+            else:
+                print("Este camión no tiene esta fecha asignada.")
+                optionRep = input("Desea seguir con el menú de Recepción, S o N: ")
+                optionRep = optionRep.upper()
+        else:
+            print("La patente no se encuentra en estado Pendiente.")
+            optionRep = input("Desea seguir con el menú de Recepción, S o N: ")
+            optionRep = optionRep.upper()
 
 ###--- Declaracion del metodo para el menu principal ---###
 
