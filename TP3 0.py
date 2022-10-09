@@ -292,6 +292,24 @@ def consultaProd():
         print(vrprod.nombre, vrprod.codigo)
     printmenuterciario()
 
+def modProd():
+    global afprod, alprod
+    vrprod = productos()
+    t = os.path.getsize(afprod)
+    alprod.seek(0,0)
+    if t != 0:
+        codigo = (input("Ingrese el codigo del producto a cambiar. 0 para salir"))
+        while codigo != 0: 
+            pos = posicionarseEnProd(codigo)
+            alprod.seek(pos)
+            vrprod.codigo = int (input("Ingrese el nuevo codigo para el producto"))
+            vrprod.nombre = str (input("Ingrese el nuevo nombre para el producto"))
+            vrprod.nombre = vrprod.nombre.upper()
+            formatearprod(vrprod)
+            pickle.dump(vrprod,alprod)
+            alprod.flush()
+            codigo = (input("Ingrese el codigo del producto a cambiar. 0 para salir"))
+
 def prod():
     printmenuterciario()
     opprod = input("Ingrese una opcion. V para salir: ")
